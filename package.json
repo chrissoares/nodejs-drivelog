@@ -1,0 +1,32 @@
+{
+  "name": "nodejs-drivelog",
+  "version": "0.0.1",
+  "description": "DriveLog is a simple application that helps you track the mileage of a vehicle when different people use it. It records the mileage at the beginning and end of each use, allowing you to track vehicle usage by different family members or team members. In addition, it calculates the average fuel consumption of the vehicle and presents this information clearly and accessibly. With DriveLog, you can have more precise control over the use of the vehicle and optimize fuel consumption.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chrissoares/nodejs-drivelog.git"
+  },
+  "keywords": [
+    "nodejs",
+    "mileage",
+    "track",
+    "vehicle",
+    "consumption"
+  ],
+  "author": "Christiano R Soares",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chrissoares/nodejs-drivelog/issues"
+  },
+  "homepage": "https://github.com/chrissoares/nodejs-drivelog#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "mysql2": "^3.3.1",
+    "sequelize": "^6.31.1"
+  }
+}
