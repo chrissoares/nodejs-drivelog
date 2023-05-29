@@ -2,6 +2,7 @@ module.exports = {
     HOST: "localhost",
     USER: "admindrivelog",
     PASSWORD: ")4wEweBvt6E./BB]",
+    DB: "drivelog",
     dialect: "mysql",
     pool: {
         max: 5,

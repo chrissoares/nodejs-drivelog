@@ -26,6 +26,18 @@ db.sequelize.sync()
 //     console.log("Database droped and re-synced.");
 // });
 
+//Routes
+app.get("/", (req, res) => {
+    res.json({message: "Welcome to Drive Log application."});
+});
+
+require("./app/routes/auth.route")(app);
+
+//Start App
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
 
 // Tabela das kms
 // tabela dos locais
