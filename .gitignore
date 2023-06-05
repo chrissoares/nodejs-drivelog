@@ -1,2 +1,6 @@
+# Config Files
+config/auth.config.js
+
 # Dependency directories
 node_modules/
+
