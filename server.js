@@ -14,17 +14,17 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 const db = require("./app/models");
-db.sequelize.sync()
-    .then(() => {
-        console.log("Synced db.");
-    })
-    .catch((err) => {
-        console.log(`Failed to sync db: ${err.message}`);
-    });
+// db.sequelize.sync()
+//     .then(() => {
+//         console.log("Synced db.");
+//     })
+//     .catch((err) => {
+//         console.log(`Failed to sync db: ${err.message}`);
+//     });
 
-// db.sequelize.sync({force: true}).then(() => {
-//     console.log("Database droped and re-synced.");
-// });
+db.sequelize.sync({force: true}).then(() => {
+    console.log("Database droped and re-synced.");
+});
 
 //Routes
 app.get("/", (req, res) => {
@@ -39,7 +39,4 @@ app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
 
-// Tabela das kms
-// tabela dos locais
-// tabela dos condutores
-// tabela do abastecimento (deve ligar com a dos kms)
+// TODO: Tabela com Locais
