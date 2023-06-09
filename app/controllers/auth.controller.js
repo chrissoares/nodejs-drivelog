@@ -7,8 +7,6 @@ if (!config) {
     const config = require("../config/auth.config") || false;
 }
 
-console.log(config);
-
 const {
     user: User,
     role: Role,
