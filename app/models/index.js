@@ -57,7 +57,6 @@ db.user.hasOne(db.refreshToken, {
 });
 
 db.ROLES = ["user", "admin", "moderator"];
-console.log(db.vehicle);
 // Relationship Fuel Type with Vehicle.
 db.vehicle.belongsToMany(db.fuelType, {
     through: "vehicle_fueltype",
