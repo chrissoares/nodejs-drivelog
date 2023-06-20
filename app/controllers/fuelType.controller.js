@@ -7,7 +7,7 @@ exports.create = (req, res) => {
     if(!req.body.name){
         res.status(400).send({
             code: 1101,
-            message: "Fuel type: Name can't be empty"
+            message: "Fuel type: Name can't be empty."
         });
         return;
     };
@@ -93,7 +93,7 @@ exports.update = (req, res) => {
                 });
             } else {
                 res.status(400).send({
-                    code: 1121,
+                    code: 1111,
                     message: `Cannot update fuel type with id=${id}. This fuel type was not found!`
                 });
             }
@@ -106,29 +106,29 @@ exports.update = (req, res) => {
         });
 };
     
-    exports.delete = (req, res) => {
-        const id = req.params.id;
+exports.delete = (req, res) => {
+    const id = req.params.id;
         
     FuelType.destroy({
         where: {id: id}
     })
-        .then(num => {
-            if(num == 1){
-                res.send({
-                    code: 2102,
-                    message: "Fuel type was deleted successfully!"
-                });
-            } else {
-                res.status(400).send({
-                    code: 1121,
-                    message: `Cannot delete fuel type with id=${id}. This fuel type was not found!`
-                });
-            }
-        })
-        .catch(err => {
-            res.status(500).send({
-                code: 1199,
-                message: `Some error occurred while deleting fuel type with id=${id}, more information: ${err.message}`
+    .then(num => {
+        if(num == 1){
+            res.send({
+                code: 2102,
+                message: "Fuel type was deleted successfully!"
             });
+        } else {
+            res.status(400).send({
+                code: 1111,
+                message: `Cannot delete fuel type with id=${id}. This fuel type was not found!`
+            });
+        }
+    })
+    .catch(err => {
+        res.status(500).send({
+            code: 1199,
+            message: `Some error occurred while deleting fuel type with id=${id}, more information: ${err.message}`
         });
+    });
 };

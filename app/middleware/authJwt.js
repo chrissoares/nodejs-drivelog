@@ -34,6 +34,7 @@ verifyToken = (req, res, next) => {
             return catchError(err, res);
         };
         req.userId = decoded.id;
+        req.roles = decoded.roles;
         next();
     });
 };
