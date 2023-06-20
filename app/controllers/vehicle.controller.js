@@ -6,11 +6,45 @@ const User = db.user;
 const FuelType = db.fuelType;
 
 const {
-    isAdmin,
-    isModerator,
     isModeratorOrAdmin
 } = require("../func");
+
 const e = require("express");
+
+const makeCondition = async (req) => {
+    const name = req.query.name;
+    const id = req.params.id;
+    const vehicleId = req.body.vehicleId;
+
+    let condition = {};
+
+    const seeAll = await isModeratorOrAdmin(req.userId);
+
+    if (!seeAll){
+        condition = {
+            [Op.or]: [
+                {ownerId: req.userId},
+                {'$users.id$': req.userId}
+            ]
+        }
+    }
+
+    if (name){
+        condition.name = {
+            [Op.like]: `%${name}%`
+        };
+    }
+
+    if (id) {
+        condition.id = id;
+    }
+
+    if (vehicleId) {
+        condition.id = vehicleId;
+    }
+
+    return condition;
+}
 
 exports.create = (req, res) => {
     if(!req.body.licensePlate){
@@ -46,27 +80,10 @@ exports.create = (req, res) => {
 };
 
 exports.findAll = async (req, res) => {
-    const name = req.query.name;
-    let condition = {};
+    
+    const condition = await makeCondition(req);
 
-    const seeAll = await isModeratorOrAdmin(req.userId);
-
-    if (!seeAll){
-        condition = {
-            [Op.or]: [
-                {ownerId: req.userId},
-                {'$users.id$': req.userId}
-            ]
-        }
-    }
-
-    if (name){
-        condition.name = {
-            [Op.like]: `%${name}%`
-        };
-    }
-
-    Vehicle.findAll({
+    await Vehicle.findAll({
         where: condition,
         include: [
             {
@@ -101,22 +118,8 @@ exports.findAll = async (req, res) => {
 };
 
 exports.findOne = async (req, res) => {
-    const id = req.params.id;
 
-    let condition = {};
-
-    const seeAll = await isModeratorOrAdmin(req.userId);
-
-    if (!seeAll){
-        condition = {
-            [Op.or]: [
-                {ownerId: req.userId},
-                {'$users.id$': req.userId}
-            ]
-        }
-    }
-
-    condition.id = id;
+    const condition = await makeCondition(req);
 
     Vehicle.findOne({
         where: condition,
@@ -145,25 +148,12 @@ exports.findOne = async (req, res) => {
 };
 
 exports.update = async (req, res) => {
-    const id = req.params.id;
 
-    let condition = {};
+    const condition = await makeCondition(req);
     const conditionUpdate = {
-        id: id
+        id: req.params.id
     };
 
-    const seeAll = await isModeratorOrAdmin(req.userId);
-
-    if (!seeAll){
-        condition = {
-            [Op.or]: [
-                {ownerId: req.userId},
-                {'$users.id$': req.userId}
-            ]
-        }
-    }
-
-    condition.id = id;
 
     Vehicle.findOne({
         where: condition,
@@ -177,7 +167,7 @@ exports.update = async (req, res) => {
         if (!data){
             res.status(404).send({
                 code: 1212,
-                message: `Cannot find vehicle with id=${id}, or not have access to this vehicle.`
+                message: `Cannot find vehicle with id=${req.params.id}, or not have access to this vehicle.`
             });
         };
     });
@@ -194,7 +184,7 @@ exports.update = async (req, res) => {
         } else {
             res.status(404).send({
                 code: 1221,
-                message: `Cannot update vehicle with id=${id}. This vehicle was not found, or not have access to this vehicle!`
+                message: `Cannot update vehicle with id=${req.params.id}. This vehicle was not found, or not have access to this vehicle!`
             });
         };
     })
@@ -207,25 +197,12 @@ exports.update = async (req, res) => {
 };
 
 exports.delete = async (req, res) => {
-    const id = req.params.id;
 
-    let condition = {};
+    const condition = await makeCondition(req);
     const conditionDelete = {
-        id: id
+        id: req.params.id
     };
 
-    const seeAll = await isModeratorOrAdmin(req.userId);
-
-    if (!seeAll){
-        condition = {
-            [Op.or]: [
-                {ownerId: req.userId},
-                {'$users.id$': req.userId}
-            ]
-        }
-    }
-
-    condition.id = id;
 
     Vehicle.findOne({
         where: condition,
@@ -239,7 +216,7 @@ exports.delete = async (req, res) => {
         if (!data){
             res.status(404).send({
                 code: 1212,
-                message: `Cannot find vehicle with id=${id}, or not have access to this vehicle.`
+                message: `Cannot find vehicle with id=${req.params.id}, or not have access to this vehicle.`
             });
         };
     });
@@ -256,7 +233,7 @@ exports.delete = async (req, res) => {
         } else {
             res.status(404).send({
                 code: 1212,
-                message: `Cannot delete vehicle with id=${id}. This vehicle was not found, or not have access to this vehicle!`
+                message: `Cannot delete vehicle with id=${req.params.id}. This vehicle was not found, or not have access to this vehicle!`
             });
         }
     })
@@ -270,22 +247,8 @@ exports.delete = async (req, res) => {
 
 exports.addUser = async (req, res) => {
     const userId = req.body.userId;
-    const vehicleId = req.body.vehicleId;
 
-    let condition = {};
-
-    const seeAll = await isModeratorOrAdmin(req.userId);
-
-    if (!seeAll){
-        condition = {
-            [Op.or]: [
-                {ownerId: req.userId},
-                {'$users.id$': req.userId}
-            ]
-        }
-    }
-
-    condition.id = vehicleId;
+    const condition = await makeCondition(req);
 
     Vehicle.findOne({
         include:[
@@ -327,23 +290,9 @@ exports.addUser = async (req, res) => {
 };
 
 exports.addFuelType = async (req, res) => {
-    const vehicleId = req.body.vehicleId;
     const fuelTypeId = req.body.fuelTypeId;
 
-    let condition = {};
-
-    const seeAll = await isModeratorOrAdmin(req.userId);
-
-    if (!seeAll){
-        condition = {
-            [Op.or]: [
-                {ownerId: req.userId},
-                {'$users.id$': req.userId}
-            ]
-        }
-    }
-
-    condition.id = vehicleId;
+    const condition = await makeCondition(req);
 
     Vehicle.findOne({
         include:[
