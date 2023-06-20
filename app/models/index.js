@@ -74,11 +74,13 @@ db.fuelType.belongsToMany(db.vehicle, {
 
 // Relationship Vehicle proprietor
 db.vehicle.belongsTo(db.user, {
-    foreignKey: "proprietorId",
+    foreignKey: "ownerId",
     as: "users"
 });
 
 db.user.hasMany(db.vehicle, {
+    //repeat foreign key, or will duplicate with another foreign Key caller userId
+    foreignKey: "ownerId", 
     as: "vehicles"
 });
 

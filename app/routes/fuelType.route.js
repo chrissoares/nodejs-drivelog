@@ -45,15 +45,5 @@ module.exports = app => {
         fuelType.delete
     )
     
-    // router.put("/:id", fuelType.update, [
-    //     authJwt.verifyToken,
-    //     authJwt.isModeratorOrAdmin
-    // ]);
-
-    // router.delete("/:id", fuelType.delete, [
-    //     authJwt.verifyToken,
-    //     authJwt.isAdmin
-    // ]);
-
     app.use("/api/fueltype", router);
 }

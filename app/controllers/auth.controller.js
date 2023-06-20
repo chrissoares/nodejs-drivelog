@@ -80,26 +80,28 @@ exports.signin = (req, res) => {
                 accessToken: null,
                 message: "Invalid password!"
             });
-        }
-
-        var token = jwt.sign(
-            {
-                id: user.id
-            },
-            config.secret,
-            {
-                expiresIn: config.jwtExpiration
-            }
-        );
+        };
 
         let refreshToken = await RefreshToken.createToken(user);
 
         let authorities = [];
+        let userRoles = [];
         user.getRoles()
             .then(roles => {
                 for(let i = 0; i< roles.length; i++){
                     authorities.push(`ROLE_${roles[i].name.toUpperCase()}`);
+                    userRoles.push(roles[i].name);
                 };
+                var token = jwt.sign(
+                    {
+                        id: user.id,
+                        roles: userRoles
+                    },
+                    config.secret,
+                    {
+                        expiresIn: config.jwtExpiration
+                    }
+                );
                 res.status(200).send({
                     id: user.id,
                     username: user.username,
